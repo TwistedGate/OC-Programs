@@ -84,7 +84,7 @@ local func_Wrap = function(driveAddress, world)
     local worldIndex = world.toIndex(x, y, z)
     local sector, sectorIndex = modu(worldIndex, dhworld.internal.drive.getSectorSize())
     
-    if (lastSectorData==nil and lastSector==nil) or sector~=lastSector then
+    if sector~=lastSector then
       lastSector = sector
       lastSectorData = dhworld.internal.drive.readSector(sector)
     end
