@@ -72,7 +72,7 @@ local func_Create = function(widthIn, heightIn, depthIn)
   function hworld.isAir(x, y, z)
     areNumericCoords(x, y, z)
     if not hworld.inBounds(x, y, z) then return true end
-    return getVoxel(x, y, z)==0
+    return hworld.getVoxel(x, y, z)==0
   end
   
   function hworld.fcube(x, y, z, w, h, d, voxel)
