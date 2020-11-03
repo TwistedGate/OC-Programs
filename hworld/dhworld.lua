@@ -18,19 +18,20 @@ local func_Wrap = function(driveAddress, world)
   checkArg(2, world, "table")
   
   local reason = nil
+  local dr = nil
   driveAddress, reason = component.get(driveAddress)
   if not driveAddress then
     return nil, reason
   end
-  driveAddress, reason = component.proxy(driveAddress)
-  if not driveAddress then
+  dr, reason = component.proxy(driveAddress)
+  if not dr then
     return nil, reason
   end
   
-  assert(not world.voxels, "Not a hworld-instance.")
+  assert(world.voxels, "Not a hworld-instance.")
   
   local ws = world.getWidth() * world.getHeight() * world.getDepth()
-  assert(ws <= drive.getCapacity(), "World size exceeds drive capacity! ("..tostring(ws).." > "..tostring(dr.getCapacity())..")")
+  assert(ws <= dr.getCapacity(), "World size exceeds drive capacity! ("..tostring(ws).." > "..tostring(dr.getCapacity())..")")
   
   ------------------------------------------------------------------
   
@@ -38,7 +39,7 @@ local func_Wrap = function(driveAddress, world)
   
   dhworld.voxels = nil -- Remove voxels table, not used here anyway
   
-  dhworld.internal.drive = dr
+  dhworld.internal = {drive = dr}
   
   function dhworld.reset()
     local sectorSize = dhworld.internal.drive.getSectorSize()
