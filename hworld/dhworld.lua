@@ -53,7 +53,7 @@ local func_Wrap = function(driveAddress, world)
     for sector=1,used do dhworld.internal.drive.writeSector(sector, empty) os.sleep(0) end
   end
   
-  local lastSector, lastSectorData = nil, nil
+  local lastSector, lastSectorData, prevSectorData = nil, nil, nil
   
   function dhworld.setVoxel(x, y, z, value)
     areNumericCoords(x, y, z)
@@ -69,8 +69,6 @@ local func_Wrap = function(driveAddress, world)
       local sector, sectorIndex = modu(worldIndex, dhworld.internal.drive.getSectorSize())
       
       lastSectorData = replace(lastSectorData, sectorIndex, value)
-      
-      dhworld.internal.drive.writeSector(sector, lastSectorData)
       return true
     end
     
@@ -86,8 +84,13 @@ local func_Wrap = function(driveAddress, world)
     local sector, sectorIndex = modu(worldIndex, dhworld.internal.drive.getSectorSize())
     
     if sector~=lastSector then
+      -- First write only if the data changed, then read the new sector
+      if (lastSector and lastSectorData) and lastSectorData~=prevSectorData then
+        dhworld.internal.drive.writeSector(lastSector, lastSectorData)
+      end
       lastSector = sector
       lastSectorData = dhworld.internal.drive.readSector(sector)
+      prevSectorData = lastSectorData
     end
     
     return get(lastSectorData, sectorIndex)
