@@ -195,6 +195,26 @@ local func_Create = function(widthIn, heightIn, depthIn)
     end
   end
   
+  function hworld.hxzcircle(x, y, z, radius, voxel)
+    areNumericCoords(x, y, z)
+    voxel = voxel or 0
+    
+    local ra = square(radius)
+    local rb = square(radius-1)
+    for k=-radius,radius do
+      for i=-radius,radius do
+        local xa = x+i
+        local za = z+k
+        
+        local sqr = square(x-xa, z-za)
+        if sqr>=rb and sqr<=ra then
+          hworld.setVoxel(xa, y, za, voxel)
+        end
+      end
+      os.sleep(0)
+    end
+  end
+  
   function hworld.applyTo(component)
     checkArg(1, component, "table")
     assert(component.type=="hologram", "Expected a hologram")
