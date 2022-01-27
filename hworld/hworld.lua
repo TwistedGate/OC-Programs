@@ -1,7 +1,5 @@
 local function areNumericCoords(x, y, z)
-  checkArg(1, x, "number")
-  checkArg(2, y, "number")
-  checkArg(3, z, "number")
+  checkArg(1, x, "number") checkArg(2, y, "number") checkArg(3, z, "number")
 end
 
 local function modu(a, b) a=a-1 return math.floor(a/b)+1, (a%b)+1 end
@@ -9,27 +7,18 @@ local function square(...) local ret=0 local numbers=table.pack(...) for i=1,#nu
 local function ps(...) local ret="" local whatever=table.pack(...) for i=1,#whatever do ret=ret.." "..tostring(whatever[i]) end return ret end
 
 local func_Create = function(widthIn, heightIn, depthIn)
-  
-  widthIn  = widthIn  or 48
-  heightIn = heightIn or 32
-  depthIn  = depthIn  or 48
+  widthIn, heightIn, depthIn = widthIn or 48, heightIn or 32, depthIn  or 48
   
   local hworld = {}
-  
   hworld.voxels = {}
   
-  function hworld.getWidth()
-    return widthIn
-  end
+  function hworld.getWidth() return widthIn end
+  function hworld.getHeight() return heightIn end
+  function hworld.getDepth() return depthIn end
   
-  function hworld.getHeight()
-    return heightIn
+  function hworld.reset()
+    hworld.voxels = {}
   end
-  
-  function hworld.getDepth()
-    return depthIn
-  end
-  
   
   function hworld.inBounds(x, y, z)
     areNumericCoords(x, y, z)
@@ -40,10 +29,6 @@ local func_Create = function(widthIn, heightIn, depthIn)
     areNumericCoords(x, y, z)
     x=x-1 y=y-1 z=z-1
     return (hworld.getWidth() * hworld.getDepth() * y + hworld.getWidth() * z + x) + 1
-  end
-  
-  function hworld.reset()
-    hworld.voxels = {}
   end
   
   function hworld.setVoxel(x, y, z, value)
